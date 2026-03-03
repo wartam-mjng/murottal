@@ -10,13 +10,11 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .font-arabic { font-family: 'Amiri', serif; }
         
-        /* Mengubah gradasi menjadi lebih cerah */
         .bg-main {
             background: radial-gradient(circle at top right, #065f46, #064e3b, #022c22);
             background-attachment: fixed;
         }
 
-        /* Navigasi dengan Bingkai */
         .nav-link {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             color: rgba(209, 250, 229, 0.7);
@@ -89,7 +87,7 @@
         </div>
     </div>
 
-    <!-- Header / Navigation -->
+    <!-- Navigasi Utama -->
     <nav class="sticky top-0 z-50 bg-emerald-900/40 backdrop-blur-xl border-b border-white/10">
         <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
             <div class="flex items-center gap-2 cursor-pointer group" onclick="showSection('sholat')">
@@ -107,7 +105,7 @@
 
     <main class="max-w-5xl mx-auto px-6 py-12 flex-grow">
         
-        <!-- SECTION: JADWAL SHOLAT -->
+        <!-- JADWAL SHOLAT -->
         <section id="section-sholat" class="animate-fade space-y-10">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div>
@@ -129,6 +127,7 @@
                 </div>
             </div>
 
+            <!-- Pencarian Lokasi -->
             <div class="glass-card p-4 md:p-6 flex flex-col md:flex-row gap-4 items-center">
                 <div class="w-full md:w-1/3">
                     <label class="text-[9px] font-bold text-emerald-200/50 uppercase tracking-widest ml-1 mb-1 block">Pilih Provinsi</label>
@@ -151,7 +150,7 @@
             </div>
         </section>
 
-        <!-- SECTION: AL-QURAN -->
+        <!-- AL-QURAN -->
         <section id="section-quran" class="hidden animate-fade space-y-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
@@ -165,17 +164,20 @@
             </div>
             <div id="surah-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             
+            <!-- Detail Surah -->
             <div id="surah-detail" class="hidden animate-fade space-y-8">
                 <div class="flex items-center justify-between">
                     <button onclick="backToList()" class="flex items-center gap-2 text-emerald-300 font-bold text-sm hover:translate-x-[-4px] transition-transform">
                         <span>←</span> Kembali
                     </button>
-                    <div class="flex items-center gap-3">
-                        <label class="text-[10px] font-bold text-emerald-200 uppercase">Pilih Qori:</label>
-                        <select id="select-qori" onchange="changeQori(this.value)" class="bg-emerald-800/60 border border-white/10 rounded-xl px-3 py-2 text-[11px] font-bold text-emerald-50 outline-none focus:ring-2 focus:ring-emerald-400/20">
-                            <option value="01">Mishary Rashid Al-Afasy</option>
+                    <div class="flex flex-col items-end gap-1">
+                        <label class="text-[9px] font-bold text-emerald-200/50 uppercase tracking-widest">Pilih Qori:</label>
+                        <select id="select-qori" onchange="changeQori(this.value)" class="bg-emerald-800/60 border border-white/10 rounded-xl px-4 py-2.5 text-[12px] font-bold text-emerald-50 outline-none focus:ring-2 focus:ring-emerald-400/20">
+                            <option value="03" selected>Abdurrahman As-Sudais</option>
+                            <option value="01">Sa'ad Al-Ghamidi</option>
                             <option value="02">Abdullah Al-Juhany</option>
-                            <option value="03">Abdurrahman As-Sudais</option>
+                            <option value="04">Ibrahim Al-Dossari</option>
+                            <option value="05">Muammar ZA (Indonesia)</option>
                         </select>
                     </div>
                 </div>
@@ -184,7 +186,7 @@
             </div>
         </section>
 
-        <!-- SECTION: DOA -->
+        <!-- DOA -->
         <section id="section-doa" class="hidden animate-fade space-y-8">
             <h2 class="text-3xl font-extrabold text-white tracking-tight">Hisnul Muslim</h2>
             <div id="doa-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
@@ -205,16 +207,19 @@
         </div>
     </footer>
 
+    <!-- Audio Player Bar -->
     <div id="audio-bar" class="fixed bottom-0 inset-x-0 bg-emerald-900/90 backdrop-blur-2xl border-t border-white/10 px-6 py-4 z-[90] hidden transform translate-y-full transition-transform duration-500 shadow-2xl">
         <div class="max-w-5xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <div class="w-10 h-10 bg-emerald-400 rounded-xl flex items-center justify-center text-emerald-950 text-lg">🔊</div>
                 <div>
                     <p id="audio-title" class="font-bold text-white text-sm">Memutar</p>
-                    <p id="audio-qori" class="text-[10px] text-emerald-300 font-bold uppercase tracking-widest">Mishary Rashid Al-Afasy</p>
+                    <p id="audio-qori-display" class="text-[10px] text-emerald-300 font-bold uppercase tracking-widest">Abdurrahman As-Sudais</p>
                 </div>
             </div>
-            <button onclick="stopAudio()" class="bg-red-500/20 text-red-100 px-6 py-2 rounded-xl text-[11px] font-bold hover:bg-red-500 transition-colors">STOP</button>
+            <div class="flex items-center gap-4">
+                <button onclick="stopAudio()" class="bg-red-500/20 text-red-100 px-6 py-2 rounded-xl text-[11px] font-bold hover:bg-red-500 transition-colors">STOP</button>
+            </div>
         </div>
     </div>
 
@@ -235,16 +240,24 @@
         
         let allSurah = [];
         let currentSurahData = null;
-        let selectedQori = "01";
+        let selectedQori = "03"; // Default ke As-Sudais
         let currentTimings = null;
         let lastNotifiedMinute = -1;
 
-        const qoriLabels = { "01": "Mishary Rashid Al-Afasy", "02": "Abdullah Al-Juhany", "03": "Abdurrahman As-Sudais" };
+        const qoriLabels = { 
+            "01": "Sa'ad Al-Ghamidi",
+            "02": "Abdullah Al-Juhany", 
+            "03": "Abdurrahman As-Sudais",
+            "04": "Ibrahim Al-Dossari",
+            "05": "Muammar ZA"
+        };
 
         const hisnulMuslimData = [
             { title: "Doa Bangun Tidur", arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ", translation: "Segala puji bagi Allah yang menghidupkan kami setelah mematikan kami dan kepada-Nya kami kembali." },
             { title: "Doa Masuk Masjid", arabic: "اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ", translation: "Ya Allah, bukakanlah bagiku pintu-pintu rahmat-Mu." },
-            { title: "Doa Keluar Masjid", arabic: "اللَّهُمَّ إِنِّI أَسْأَلُكَ مِنْ فَضْلِكَ", translation: "Ya Allah, sesungguhnya aku memohon keutamaan dari-Mu." }
+            { title: "Doa Keluar Masjid", arabic: "اللَّهُمَّ إِنِّI أَسْأَلُكَ مِنْ فَضْلِكَ", translation: "Ya Allah, sesungguhnya aku memohon keutamaan dari-Mu." },
+            { title: "Doa Sebelum Makan", arabic: "بِاسْمِ اللَّهِ", translation: "Dengan nama Allah (aku makan)." },
+            { title: "Doa Sesudah Makan", arabic: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ", translation: "Segala puji bagi Allah yang memberi makan ini kepadaku dan memberi rezeki kepadaku tanpa daya dan kekuatan dariku." }
         ];
 
         window.onload = async () => {
@@ -268,7 +281,10 @@
 
         function changeQori(val) {
             selectedQori = val;
-            if (currentSurahData) renderSurahDetail();
+            if (currentSurahData) {
+                renderSurahDetail();
+                document.getElementById('audio-qori-display').innerText = qoriLabels[selectedQori];
+            }
         }
 
         function updateClock() {
@@ -385,7 +401,9 @@
             document.getElementById('detail-header').innerHTML = `
                 <h2 class="text-5xl font-arabic mb-3 text-emerald-50">${currentSurahData.nama}</h2>
                 <h3 class="text-xl font-bold text-emerald-300 mb-6">${currentSurahData.namaLatin}</h3>
-                <button onclick="playFullSurah()" class="bg-emerald-400 text-emerald-950 px-8 py-3 rounded-2xl text-[11px] font-bold shadow-lg hover:bg-emerald-300 transition-all">▶ PUTAR FULL SURAH</button>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <button onclick="playFullSurah()" class="bg-emerald-400 text-emerald-950 px-8 py-3 rounded-2xl text-[11px] font-bold shadow-lg hover:bg-emerald-300 transition-all">▶ PUTAR FULL SURAH</button>
+                </div>
             `;
             const container = document.getElementById('ayat-container');
             container.innerHTML = '';
@@ -410,19 +428,24 @@
             const audio = document.getElementById('global-audio-player');
             stopAudio();
             const ayatEl = document.getElementById(`ayat-${nomor}`);
-            if (ayatEl) ayatEl.classList.add('border-emerald-400', 'bg-white/10');
-            audio.src = url; audio.play().catch(e => console.log("Audio blocked"));
+            if (ayatEl) {
+                ayatEl.classList.add('border-emerald-400', 'bg-white/10');
+            }
+            audio.src = url; 
+            audio.play().catch(e => console.log("Audio blocked"));
             document.getElementById('audio-bar').classList.remove('hidden', 'translate-y-full');
-            document.getElementById('audio-title').innerText = `Ayat ${nomor}`;
-            document.getElementById('audio-qori').innerText = qoriLabels[selectedQori];
+            document.getElementById('audio-title').innerText = `${currentSurahData.namaLatin} - Ayat ${nomor}`;
+            document.getElementById('audio-qori-display').innerText = qoriLabels[selectedQori];
         }
 
         function playFullSurah() {
             const audio = document.getElementById('global-audio-player');
             stopAudio();
-            audio.src = currentSurahData.audioFull[selectedQori]; audio.play().catch(e => console.log("Audio blocked"));
+            audio.src = currentSurahData.audioFull[selectedQori]; 
+            audio.play().catch(e => console.log("Audio blocked"));
             document.getElementById('audio-bar').classList.remove('hidden', 'translate-y-full');
-            document.getElementById('audio-title').innerText = currentSurahData.namaLatin;
+            document.getElementById('audio-title').innerText = `Full ${currentSurahData.namaLatin}`;
+            document.getElementById('audio-qori-display').innerText = qoriLabels[selectedQori];
         }
 
         function stopAudio() {
@@ -444,7 +467,7 @@
         }
 
         function loadProvinsi() {
-            const provs = ["ACEH", "SUMATERA UTARA", "DKI JAKARTA", "JAWA BARAT", "JAWA TENGAH", "JAWA TIMUR", "BANTEN", "BALI"];
+            const provs = ["ACEH", "SUMATERA UTARA", "SUMATERA BARAT", "RIAU", "DKI JAKARTA", "JAWA BARAT", "JAWA TENGAH", "JAWA TIMUR", "BANTEN", "BALI", "KALIMANTAN SELATAN", "SULAWESI SELATAN", "PAPUA"];
             const selectProv = document.getElementById('select-provinsi');
             provs.forEach(p => {
                 const opt = document.createElement('option');
@@ -472,7 +495,10 @@
                         }
                     } catch(e) { console.error("GPS Error"); }
                     setLoader(false);
-                }, () => setLoader(false));
+                }, () => {
+                    setLoader(false);
+                    alert("Gagal mengakses lokasi. Pastikan izin lokasi diaktifkan.");
+                });
             }
         }
 
@@ -480,7 +506,11 @@
             const list = document.getElementById('doa-list'); 
             list.innerHTML = '';
             data.forEach((doa, index) => {
-                list.innerHTML += `<div class="glass-card p-6 cursor-pointer hover:border-emerald-400/50" onclick="getDoaDetail(${index})"><h3 class="font-bold text-emerald-50 text-sm">${doa.title}</h3></div>`;
+                list.innerHTML += `
+                <div class="glass-card p-6 cursor-pointer hover:border-emerald-400/50 flex justify-between items-center group" onclick="getDoaDetail(${index})">
+                    <h3 class="font-bold text-emerald-50 text-sm">${doa.title}</h3>
+                    <span class="text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                </div>`;
             });
         }
         
@@ -490,10 +520,13 @@
             document.getElementById('doa-detail').classList.remove('hidden');
             document.getElementById('doa-detail-container').innerHTML = `
                 <div class="glass-card p-12 text-center">
-                    <h2 class="text-xl font-bold mb-8 text-emerald-300">${doa.title}</h2>
-                    <p class="font-arabic text-3xl leading-[2.5] mb-8 text-white">${doa.arabic}</p>
-                    <p class="text-emerald-100 text-sm italic">"${doa.translation}"</p>
+                    <h2 class="text-xl font-bold mb-8 text-emerald-300 uppercase tracking-widest">${doa.title}</h2>
+                    <p class="font-arabic text-3xl leading-[2.8] mb-10 text-white">${doa.arabic}</p>
+                    <div class="pt-8 border-t border-white/10">
+                        <p class="text-emerald-100 text-sm italic leading-relaxed">"${doa.translation}"</p>
+                    </div>
                 </div>`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         function backToDoaList() { 
